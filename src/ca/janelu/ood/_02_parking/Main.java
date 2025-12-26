@@ -2,7 +2,7 @@ package ca.janelu.ood._02_parking;
 
 public class Main {
     public static void main(String[] args) {
-        ParkingGarage parkingGarage = new ParkingGarage();
+        ParkingGarage parkingGarage = new ParkingGarage(3, 10);
         ParkingSystem parkingSyatem = new ParkingSystem(parkingGarage, 10);
         Driver driver1 = new Driver(new Car(1),1);
         Driver driver2 = new Driver(new Limo(1),2);

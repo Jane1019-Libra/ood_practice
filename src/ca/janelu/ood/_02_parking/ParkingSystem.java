@@ -1,12 +1,16 @@
 package ca.janelu.ood._02_parking;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class ParkingSystem {
     private ParkingGarage parkingGarage;
     private Map<Integer, Integer> timeParked;
     private int hourRate;
+
+    private Scanner scanner = new Scanner(System.in);
 
     public ParkingSystem(ParkingGarage parkingGarage, int hourRate) {
         this.parkingGarage = parkingGarage;
@@ -14,11 +18,37 @@ public class ParkingSystem {
         this.hourRate = hourRate;
     }
 
-    public boolean parkVechicle(Driver driver) {
-
+    public boolean parkVehicle(Driver driver) {
+        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        boolean isParked = parkingGarage.parkVechicle(driver.getVehicle());
+        if (isParked) {
+            timeParked.put(driver.getId(), currentHour);
+        }
+        return isParked;
     }
 
-    public boolean removeVechicle(Driver driver) {
+    public boolean removeVehicle(Driver driver) {
 
+//        if (!timeParked.containsKey(driver.getId())) {
+//            return false;
+//
+//        }
+//        timeParked.remove(driver.getId());
+        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        System.out.println(currentHour);
+        boolean existed = parkingGarage.removeVehicle(driver.getVehicle(), true);
+        if (!existed) {
+            System.out.println("There is no car parked for id: " + driver.getId());
+            return false;
+        }
+        boolean paid = driver.balancePrepaid((currentHour - timeParked.get(driver.getId())) * hourRate * driver.getVehicle().getSpotSize());
+        if (!paid) return false;
+        else {
+            System.out.println("Paid successfully. The remaining balance in the account is: " + driver.getPaymentMethod().getRemaining());
+        }
+
+        boolean removed = parkingGarage.removeVehicle(driver.getVehicle(), false);
+        timeParked.remove(driver.getId());
+        return removed;
     }
 }
