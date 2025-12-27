@@ -28,12 +28,6 @@ public class ParkingSystem {
     }
 
     public boolean removeVehicle(Driver driver) {
-
-//        if (!timeParked.containsKey(driver.getId())) {
-//            return false;
-//
-//        }
-//        timeParked.remove(driver.getId());
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         System.out.println(currentHour);
         boolean existed = parkingGarage.removeVehicle(driver.getVehicle(), true);
@@ -41,11 +35,7 @@ public class ParkingSystem {
             System.out.println("There is no car parked for id: " + driver.getId());
             return false;
         }
-        boolean paid = driver.balancePrepaid((currentHour - timeParked.get(driver.getId())) * hourRate * driver.getVehicle().getSpotSize());
-        if (!paid) return false;
-        else {
-            System.out.println("Paid successfully. The remaining balance in the account is: " + driver.getPaymentMethod().getRemaining());
-        }
+
 
         boolean removed = parkingGarage.removeVehicle(driver.getVehicle(), false);
         timeParked.remove(driver.getId());
